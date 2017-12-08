@@ -1,17 +1,46 @@
 import React, {Component} from 'react';
 import Button from '../../../components/ui/button/button';
 import Spinner from '../../../components/ui/spinner/spinner';
+import Input from '../../../components/ui/input/input';
 
 import css from './contact-data.css';
 import axios from '../../../axios-orders';
 
 class ContactData extends Component {
 	state = {
-		name: '',
-		email: '',
+		name: {
+			elementType: 'input',
+			elementConfig: {
+				type: "text",
+				placeholder: 'Your Name'
+			},
+			value: ''
+		},
+		email: {
+			elementType: 'input',
+			elementConfig: {
+				type: "email",
+				placeholder: 'Your Email'
+			},
+			value: ''
+		},
 		address: {
-			street: '',
-			postalCode: ''
+			street: {
+				elementType: 'input',
+				elementConfig: {
+					type: "text",
+					placeholder: 'Address'
+				},
+				value: ''
+			},
+			postalCode: {
+				elementType: 'input',
+				elementConfig: {
+					type: "text",
+					placeholder: 'Zip Code'
+				},
+				value: ''
+			}
 		},
 		loading: false
 	};
@@ -42,10 +71,10 @@ class ContactData extends Component {
 	render() {
 
 		const form = this.state.loading ? <Spinner/> : <form>
-			<input type="text" name="name"  className={css.Input} placeholder="Your Name"/>
-			<input type="email" name="email"  className={css.Input} placeholder="Email"/>
-			<input type="text" name="street"  className={css.Input} placeholder="Address"/>
-			<input type="text" name="postal"  className={css.Input} placeholder="Postal Code"/>
+			<Input inputtype="input" type="text" name="name"  placeholder="Your Name"/>
+			<Input inputtype="input" type="email" name="email" placeholder="Email"/>
+			<Input inputtype="input" type="text" name="street" placeholder="Address"/>
+			<Input inputtype="input" type="text" name="postal" placeholder="Postal Code"/>
 		</form>;
 
 		return(

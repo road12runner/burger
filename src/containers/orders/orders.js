@@ -20,19 +20,19 @@ class Orders extends Component {
 	}
 
 	renderOrders(orders) {
-    const result = [];
+    	const result = [];
 		for ( let key in orders) {
-      const order = orders[key];
-      result.push( <Order key={key} ingredient={order.ingredients} price={order.price}/>)
-    }
-    console.log('orders', result);
+      		const order = orders[key];
+      		result.push( <Order key={key} ingredients={order.ingredients} price={order.price}/>)
+    	}
+    	console.log('orders', result);
 		return result;
 
 	}
 
 	render() {
 
-		const orders = this.state.loading ? <Spinner/> : this.renderOrders(this.state.orders);
+		const orders = (this.state.loading && !this.state.orders) ? <Spinner/> : this.renderOrders(this.state.orders);
 
 		return (
 			<div>
