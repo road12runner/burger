@@ -5,7 +5,7 @@ const order = (props) => {
 
 	const ingredients = Object.keys(props.ingredients).map( objKey => {
 		const val = props.ingredients[objKey];
-		 const text = `${objKey}(${val})`;
+		const text = `${objKey}(${val})`;
 
 		 return <span key={objKey} style={{ textTransform: 'capitalize', display: 'inline-block', margin: '0 8px', padding: '5px', border: '1px solid #ccc'}}>{text}</span>
 	});
