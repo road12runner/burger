@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import Button from '../../../components/ui/button/button';
 import Spinner from '../../../components/ui/spinner/spinner';
 import Input from '../../../components/ui/input/input';
@@ -102,7 +103,7 @@ class ContactData extends Component {
 			formData[formElement] = this.state.orderForm[formElement].value;
 		}
 
-		axios.post('/orders.json', {ingredients : this.props.ingredients, price : this.props.price, orderData: formData, deliveryMethod: 'fastest'}).then( response => {
+		axios.post('/orders.json', {ingredients : this.props.ings, price : this.props.price, orderData: formData, deliveryMethod: 'fastest'}).then( response => {
 			console.log('response', response);
 
 			setTimeout(()=> {
@@ -175,4 +176,11 @@ class ContactData extends Component {
 	}
 }
 
-export default ContactData;
+const mapStateToProps = state => {
+	return {
+		ings: state.ingredients,
+		price: state.totalPrice
+	};
+};
+
+export default connect(mapStateToProps)(ContactData);
