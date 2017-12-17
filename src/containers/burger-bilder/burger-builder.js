@@ -9,8 +9,9 @@ import OrderSummary from '../../components/burger/order-summary/order-summary';
 import Spinner from '../../components/ui/spinner/spinner';
 import withErrorHandler from '../../hoc/with-error-handler';
 import axios from '../../axios-orders';
+import * as burgerBuilderActions  from '../../store/actions/';
 
-import * as actionsTypes from '../../store/actionTypes';
+import * as actionsTypes from '../../store/actions/actionTypes';
 
 const  INGREDIENT_PRICES = {
 	salad: 0.5,
@@ -28,15 +29,17 @@ class BurgerBuilder extends Component{
 	};
 
 	componentDidMount() {
-		axios.get('https://burger-90e99.firebaseio.com/ingredients.json')
-			.then (resp => this.setState({ingredients: resp.data}))
-			.catch(error => {
-				console.log('error', error);
-				this.setState({error: error})
-			});
+		// axios.get('https://burger-90e99.firebaseio.com/ingredients.json')
+		// 	.then (resp => this.setState({ingredients: resp.data}))
+		// 	.catch(error => {
+		// 		console.log('error', error);
+		// 		this.setState({error: error})
+		// 	});
+		this.props.onInitIngredients();
 	}
 
 	purchaseHandler = () => {
+		this.props.onInitOrder();
 		this.setState({purchasing: true});
 	};
 
@@ -151,16 +154,19 @@ class BurgerBuilder extends Component{
 
 const mapStateToProps = (state) => {
 	return {
-		ings : state.ingredients,
-		totalPrice: state.totalPrice
+		ings : state.burgerReducer.ingredients,
+		error: state.burgerReducer.error,
+		totalPrice: state.burgerReducer.totalPrice
 	};
 };
 
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onIngredientAdded: ingredientName => dispatch({type: actionsTypes.ADD_INGREDIENT, ingredientName}),
-		onIngredientRemoved: ingredientName => dispatch({type: actionsTypes.REMOVE_INGREDIENT, ingredientName}),
+		onIngredientAdded: ingredientName => dispatch(burgerBuilderActions.addIngredient(ingredientName)),
+		onIngredientRemoved: ingredientName => dispatch(burgerBuilderActions.removeIngredient(ingredientName)),
+		onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients()),
+		onInitOrder: () => dispatch(burgerBuilderActions.orderBurgerInit())
 	}
 };
 
