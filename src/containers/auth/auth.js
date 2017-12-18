@@ -1,9 +1,10 @@
 import React, {Component}  from 'react';
-
+import {connect} from 'react-redux';
 import Input from '../../components/ui/input/input';
 import Button from '../../components/ui/button/button';
 
 import css from './auth.css';
+import * as actions from '../../store/actions';
 
 class Auth extends Component {
 	state ={
@@ -39,12 +40,19 @@ class Auth extends Component {
 
 		}
 	};
+	
+	handleSubmit = (e) => {
+		e.preventDefault();
+		this.props.onAuthUser(this.state.controls.email.value, this.state.controls.password.value);
+		
+	};
+	
 	render(){
 		return(
 			<div className={css.AuthData}>
 				<form>
 					{this.renderInputs()}
-					<Button buttonType="Success">SUBMIT</Button>
+					<Button buttonType="Success" clicked={this.handleSubmit}>SUBMIT</Button>
 				</form>
 			</div>
 		)
@@ -65,20 +73,19 @@ class Auth extends Component {
 		return isValid;
 	}
 	
-	inputChanged =(event, inputIdentifier) => {
-		const updatedForm = {...this.state.controls};
-		const formElement = {...updatedForm[inputIdentifier]};
-		formElement.value = event.target.value;
-		formElement.valid = this.checkValidity(formElement.value, formElement.validation);
-		formElement.touched = true;
-		updatedForm[inputIdentifier] = formElement;
+	inputChanged =(event, controlName) => {
+		const updatedControls = {
+			...this.state.controls,
+			[controlName]: {
+				...this.state.controls[controlName],
+				value: event.target.value,
+				valid: this.checkValidity(event.target.value, this.state.controls[controlName].validation),
+				touched: true
+			}
+		};
+		this.setState({controls: updatedControls});
 		
-		let formIsValid = true;
-		for (let key in updatedForm) {
-			formIsValid = updatedForm[key].valid && formIsValid;
-		}
 		
-		this.setState({controls: updatedForm, formIsValid});
 	};
 	renderInputs() {
 		const formElementArray = [];
@@ -105,4 +112,10 @@ class Auth extends Component {
 	
 }
 
-export default Auth
+const mapDispatchToProps = dispatch =>{
+	return {
+		onAuthUser: (email, password) => dispatch(actions.authUser(email, password))
+	}
+};
+
+export default connect(null, mapDispatchToProps)(Auth);
