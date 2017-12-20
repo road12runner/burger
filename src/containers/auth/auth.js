@@ -2,6 +2,7 @@ import React, {Component}  from 'react';
 import {connect} from 'react-redux';
 import Input from '../../components/ui/input/input';
 import Button from '../../components/ui/button/button';
+import Spinner from '../../components/ui/spinner/spinner';
 
 import css from './auth.css';
 import * as actions from '../../store/actions';
@@ -52,7 +53,7 @@ class Auth extends Component {
 		this.setState( prevState => {
 			return {isSignup: !prevState.isSignup}
 		})
-	}
+	};
 	
 	render(){
 		return(
@@ -96,6 +97,13 @@ class Auth extends Component {
 		
 	};
 	renderInputs() {
+		if (this.props.loading) {
+			return <Spinner/>;
+		}
+		if (this.props.error){
+			return<p>{this.props.error.message}</p>
+		}
+		
 		const formElementArray = [];
 		for(let key in this.state.controls) {
 			formElementArray.push({
@@ -120,10 +128,18 @@ class Auth extends Component {
 	
 }
 
+const mapStateToProps = (state) => {
+	const {loading, token, userId, error} = state.authReducer;
+	return {
+		loading, token, userId, error
+	};
+};
+
+
 const mapDispatchToProps = dispatch =>{
 	return {
 		onAuthUser: (email, password, isSignup) => dispatch(actions.authUser(email, password, isSignup))
 	}
 };
 
-export default connect(null, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);

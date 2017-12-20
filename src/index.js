@@ -12,10 +12,11 @@ import registerServiceWorker from './registerServiceWorker';
 
 import burgerReducer from './store/reducers/burger';
 import orderReducer  from './store/reducers/order';
+import authReducer from './store/reducers/auth';
 
 //const store = createStore(reducer);
 
-const rootReducer = combineReducers({burgerReducer, orderReducer});
+const rootReducer = combineReducers({burgerReducer, orderReducer, authReducer});
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(rootReducer, composeEnhancers(
 	applyMiddleware(thunk)
