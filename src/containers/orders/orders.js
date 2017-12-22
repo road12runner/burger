@@ -12,7 +12,7 @@ class Orders extends Component {
 	// };
 
 	componentDidMount() {
-		this.props.onOrdersFetch();
+		this.props.onOrdersFetch(this.props.token, this.props.userId);
 		//this.setState({loading: true});
 		// axios.get('/orders.json').then(response => {
 		// 	setTimeout( ()=> {
@@ -48,13 +48,15 @@ class Orders extends Component {
 const mapStateToProps = (state) => {
 	return {
 		loading: state.orderReducer.loading,
-		orders: state.orderReducer.orders
+		orders: state.orderReducer.orders,
+		token: state.authReducer.token,
+		userId: state.authReducer.userId
 	};
 };
 
 const mapDispatchToProps = dispatch => {
 	return{
-		onOrdersFetch: () => dispatch(actions.fetchOrders())
+		onOrdersFetch: (token, userId) => dispatch(actions.fetchOrders(token, userId))
 	};
 };
 

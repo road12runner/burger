@@ -1,5 +1,7 @@
 import React, {Component}  from 'react';
 import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom';
+
 import Input from '../../components/ui/input/input';
 import Button from '../../components/ui/button/button';
 import Spinner from '../../components/ui/spinner/spinner';
@@ -58,6 +60,7 @@ class Auth extends Component {
 	render(){
 		return(
 			<div className={css.AuthData}>
+				{this.props.isAuthenticated ? <Redirect to={this.props.isBuilding ? '/checkout' : '/'}/> : null}
 				<form>
 					{this.renderInputs()}
 					<Button buttonType="Success" clicked={this.handleSubmit}>SUBMIT</Button>
@@ -66,7 +69,8 @@ class Auth extends Component {
 			</div>
 		)
 	}
-	
+
+
 	checkValidity(value, rules = {}) {
 		let isValid = true;
 		if (rules.required) {
@@ -131,7 +135,7 @@ class Auth extends Component {
 const mapStateToProps = (state) => {
 	const {loading, token, userId, error} = state.authReducer;
 	return {
-		loading, token, userId, error
+		loading, token, userId, error, isAuthenticated: token !== null, isBuilding: state.burgerReducer.isBuilding
 	};
 };
 

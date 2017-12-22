@@ -1,11 +1,12 @@
-import * as actionTypes from '../actions/actionTypes';
+import * as actionTypes from '../actions/actionTypes'
 
 const initialState = {
 	token: null,
 	userId: null,
 	error: null,
 	loading: false,
-};
+	authRedirectPath: '/'
+}
 
 const reducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -29,11 +30,21 @@ const reducer = (state = initialState, action) => {
 				error: action.error,
 				loading: false
 			};
+		case actionTypes.AUTH_LOGOUT:
+			return {
+				...state,
+				userId: null,
+				token: null
+			};
+		case actionTypes.SET_AUTH_REDIRECT:
+			return {
+				...state,
+				authRedirectPath: action.path
+			}
 		default:
 			return state;
-	
+
 	}
-};
+}
 
-
-export default reducer;
+export default reducer
