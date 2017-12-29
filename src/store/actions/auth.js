@@ -1,14 +1,14 @@
-import * as actionTypes from './actionTypes'
+import * as actionTypes from './actionTypes';
 
-import axios from 'axios'
+import axios from 'axios';
 
-const key = 'AIzaSyBfhSx5y_HQcrpEWCKSTyg-lA57j2JKISc'
+const key = 'AIzaSyBfhSx5y_HQcrpEWCKSTyg-lA57j2JKISc';
 
 export const authStart = () => {
 	return {
 		type: actionTypes.AUTH_START
-	}
-}
+	};
+};
 
 export const authSuccess = (token, userId) => {
 	return {
@@ -17,39 +17,49 @@ export const authSuccess = (token, userId) => {
 			token,
 			userId
 		}
-	}
-}
+	};
+};
 
 export const authFailed = (error) => {
 	return {
 		type: actionTypes.AUTH_FAILED,
 		error
-	}
-}
+	};
+};
 
 export const logout = () => {
-	localStorage.removeItem('token');
-	localStorage.removeItem('expirationDate');
+	// localStorage.removeItem('token');
+	// localStorage.removeItem('expirationDate');
+	return {
+		type: actionTypes.AUTH_INITIATE_LOGOUT
+	};
+};
+
+export const logoutSucceed = () => {
 	return {
 		type: actionTypes.AUTH_LOGOUT
-	}
-}
+	};
+};
 
 export const checkAuthTimeout = (expirationTime) => {
-	return dispatch => {
-		setTimeout(() => {
-			dispatch(logout())
-		}, expirationTime * 1000)
-	}
-}
+	return {
+		type: actionTypes.AUTH_CHECK_TIMEOUT,
+		expirationTime
+	};
+	// return dispatch => {
+	// 	setTimeout(() => {
+	// 		dispatch(logout());
+	// 	}, expirationTime * 1000);
+	// };
+};
 
 export const authUser = (email, password, isSignup) => {
 	return dispatch => {
-		dispatch(authStart())
+		dispatch(authStart());
 
-		let url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${key}`
+		let url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${key}`;
 		if (!isSignup) {
-			url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${key}`
+			url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${key}`;
 		}
 		axios.post(url, {
 			email, password, returnSecureToken: true
@@ -61,37 +71,36 @@ export const authUser = (email, password, isSignup) => {
 			localStorage.setItem('token', response.data.idToken);
 			localStorage.setItem('expirationDate', expirationData);
 			dispatch(authSuccess(response.data.idToken, response.data.localId));
-			dispatch(checkAuthTimeout(response.data.expiresIn))
+			dispatch(checkAuthTimeout(response.data.expiresIn));
 		}).catch(error => {
-			dispatch(authFailed(error.response.data.error))
-		})
+			dispatch(authFailed(error.response.data.error));
+		});
 
-	}
-}
+	};
+};
 
 export const setAuthRedirect = (path) => {
 	return {
 		type: actionTypes.SET_AUTH_REDIRECT,
 		path
-	}
-}
-
+	};
+};
 
 export const checkAuthState = () => {
-	return dispatch  => {
+	return dispatch => {
 		const token = localStorage.getItem('token');
 		const userId = localStorage.getItem('userId');
 		if (!token && !userId) {
 			dispatch(logout());
 		} else {
-			 const  expirationDate = new Date(localStorage.getItem('expirationDate'));
-			 if (expirationDate > new Date()) {
-				 dispatch(authSuccess(token, userId));
-				 dispatch(checkAuthTimeout( (expirationDate.getTime() - new Date().getTime()/1000)));
-			 } else {
-				 dispatch(logout());
-			 }
+			const expirationDate = new Date(localStorage.getItem('expirationDate'));
+			if (expirationDate > new Date()) {
+				dispatch(authSuccess(token, userId));
+				dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime() / 1000)));
+			} else {
+				dispatch(logout());
+			}
 
 		}
-	}
+	};
 };
