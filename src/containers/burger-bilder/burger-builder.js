@@ -20,7 +20,7 @@ const INGREDIENT_PRICES = {
 	meat: 1.3
 }
 
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
 	state = {
 		purchasable: false,
 		purchasing: false,

@@ -30,12 +30,15 @@ export const fetchIngredientsFailed = () => {
 
 
 export const initIngredients = () => {
-	return dispatch => {
-		axios.get('/ingredients.json')
-			.then (resp =>  dispatch(setIngredients(resp.data)))
-			.catch(error => {
-				//this.setState({error: error})
-				dispatch(fetchIngredientsFailed());
-			});
+	return {
+		type: actionTypes.INIT_INGREDIENTS
 	}
+	// return dispatch => {
+	// 	axios.get('/ingredients.json')
+	// 		.then (resp =>  dispatch(setIngredients(resp.data)))
+	// 		.catch(error => {
+	// 			//this.setState({error: error})
+	// 			dispatch(fetchIngredientsFailed());
+	// 		});
+	// }
 };
