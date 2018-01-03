@@ -30,18 +30,24 @@ export const orderBurgerInit =() => {
 };
 
 export const orderBurger = (orderData, token) => {
-	return dispatch => {
-		
-		dispatch(orderBurgerStart());
-		
-		axios.post('/orders.json?auth='+ token, orderData )
-			.then( response => {
-					const id = response.data.id;
-					dispatch(orderSuccess(response.data.name, orderData))
-				}
-			
-			).catch( error => dispatch(orderFailed(error)));
-	}
+	return {
+		type: actionTypes.PURCHASE_BURGER,
+		token,
+		orderData
+	};
+
+	// return dispatch => {
+	//
+	// 	dispatch(orderBurgerStart());
+	//
+	// 	axios.post('/orders.json?auth='+ token, orderData )
+	// 		.then( response => {
+	// 				const id = response.data.id;
+	// 				dispatch(orderSuccess(response.data.name, orderData))
+	// 			}
+	//
+	// 		).catch( error => dispatch(orderFailed(error)));
+	// }
 };
 
 
@@ -67,23 +73,29 @@ export const fetchOrderStart = () => {
 
 
 export const fetchOrders = (token, userId) => {
-	return dispatch => {
-	
-		dispatch(fetchOrderStart());
-
-		const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
-		axios.get('/orders.json' + queryParams)
-			.then(response => {
-				const fetchOrders = [];
-				for (let key in response.data) {
-					fetchOrders.push({
-						...response.data[key],
-						id: key
-					});
-				}
-				dispatch(fetchOrderSuccess(fetchOrders));
-			})
-			.catch(error => dispatch(fetchOrderFailed(error)));
+	return {
+		type: actionTypes.FETCH_ORDERS,
+		userId,
+		token
 	};
+
+	// return dispatch => {
+	//
+	// 	dispatch(fetchOrderStart());
+	//
+	// 	const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
+	// 	axios.get('/orders.json' + queryParams)
+	// 		.then(response => {
+	// 			const fetchOrders = [];
+	// 			for (let key in response.data) {
+	// 				fetchOrders.push({
+	// 					...response.data[key],
+	// 					id: key
+	// 				});
+	// 			}
+	// 			dispatch(fetchOrderSuccess(fetchOrders));
+	// 		})
+	// 		.catch(error => dispatch(fetchOrderFailed(error)));
+	// };
 	
 };
